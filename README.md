@@ -1,5 +1,5 @@
 # TAREAS
-Aplicación web para gestionar las tareas pendientes.
+Aplicación web para gestionar las tareas pendientes y que se almacenan en la memoria del navegardor (**LocalStorage**), así cuando refrescas la página o vuelves a entrar (desde el mismo navegador) la lista de tareas se conserva 😎.
 Realizada a partir del tutorial de **BluuWeb** que puedes ver [aquí](https://www.youtube.com/watch?v=DEbNCqe2e2U).
 
 ## Web
