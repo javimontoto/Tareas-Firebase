@@ -1,0 +1,24 @@
+html, body {
+    height: 100%;
+}
+
+body {
+   background: rgb(209,125,7);
+   background: linear-gradient(180deg, rgba(209,125,7,1) 0%, rgba(255,200,0,1) 100%);
+}
+
+
+/*** BARRA SUPERIOR ***/
+.navbar {
+   background-color: #ffdba4;
+}
+
+.navbar-brand > img {
+   width: 50px;
+   height: 50px;
+   float: left;
+   margin-right: 10px;
+}
+.navbar-brand > h1 {
+   font-variant: small-caps;
+}

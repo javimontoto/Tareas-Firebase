@@ -1,15 +1,20 @@
-// Selectores
+/*** SELECTORES ***/
 const formulario = document.getElementById('formulario'),
     input = document.getElementById('input'),
     listaTareas = document.getElementById('lista-tareas'),
     template = document.getElementById('template').content,
     fragment = document.createDocumentFragment();
 
-// Definimos como colección de objetos
-let tareas = {};
 
-// Pintar las tareas que ya estuvieran almacenadas
+/*** VARIABLES ***/
+let tareas = {};    //=> Contiene las tareas 
+
+
+/*** LISTENERS ***/
 document.addEventListener('DOMContentLoaded', () => {
+    // Incializamos Firebase
+    initFirebase();
+
     // Recuperamos las tareas guardas en localStorage
     if (localStorage.getItem('tareas'))
         tareas = JSON.parse(localStorage.getItem('tareas'));
@@ -22,17 +27,20 @@ listaTareas.addEventListener('click', e => {
 })
 
 formulario.addEventListener('submit', e => {
-    e.preventDefault(); // para evitar que se ejecute el formulario
-
+    e.preventDefault();
     setTarea(e);
 });
 
-// Setear la tarea
-const setTarea = e => {
-    if (input.value.trim() === '') {
-        console.log('vacío!!');
+
+/*** FUNCIONES ***/
+
+/**
+ * Guardar la tarea
+ * @param {event} e 
+ */
+function setTarea(e) {
+    if (input.value.trim() === '')
         return;
-    }
 
     // Creamos la tarea
     const tarea = {};
@@ -49,13 +57,15 @@ const setTarea = e => {
     pintarTareas();
 }
 
-// Pintar la tarea
-const pintarTareas = () => {
+/**
+ * Pintar las tareas que esten guardadas
+ */
+function pintarTareas() {
 
     // Guardamos en localStorage
     localStorage.setItem('tareas', JSON.stringify(tareas));
 
-    // Comprobamos si la lista de objetos está vacío
+    // Comprobamos si la lista de objetos está vacía
     if (Object.values(tareas).length === 0) {
         listaTareas.innerHTML = `<div class="alert alert-dark text-center">No hay tareas pendientes 😍</div>`;
         return;
@@ -68,12 +78,16 @@ const pintarTareas = () => {
         const clone = template.cloneNode(true);
         clone.querySelector('p').textContent = tarea.texto;
 
-        if(tarea.estado) {
-            // Tarea en estado realizada
+        // Comprobamos si la tarea tiene el estado realizada
+        if (tarea.estado) {
             // Cambiamos el fondo
             clone.querySelector('.alert-warning').classList.replace('alert-warning', 'alert-success');
-            // Cambiamos el incono del check por el de deshacer
-            clone.querySelectorAll('.fas')[0].classList.replace('fa-check-circle', 'fa-undo-alt');
+
+            // Actualizamos icono del check por el de deshacer y su title
+            const firstActionButton = clone.querySelectorAll('.fas')[0];
+            firstActionButton.classList.replace('fa-check-circle', 'fa-undo-alt');
+            firstActionButton.setAttribute('title', 'Reactivar');
+
             // Tachamos el texto de la tarea
             clone.querySelector('p').style.textDecoration = 'line-through';
         }
@@ -87,8 +101,11 @@ const pintarTareas = () => {
     listaTareas.appendChild(fragment);
 }
 
-// Botones de acción de las tareas
-const btnAccion = e => {
+/**
+ * Acciones de los botones de tarea
+ * @param {event} e 
+ */
+function btnAccion(e) {
     
     // Botón marcar realizada
     if (e.target.classList.contains('fa-check-circle')) {
@@ -108,7 +125,5 @@ const btnAccion = e => {
         pintarTareas();
     }
     
-    console.log(tareas);
-
     e.stopPropagation();
 }
