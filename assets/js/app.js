@@ -8,6 +8,7 @@ const formulario = document.getElementById('formulario'),
 
 /*** VARIABLES ***/
 let tareas = {}; //=> Contiene las tareas 
+let user = {}; //=> Usuario de firebase 
 
 
 /*** LISTENERS ***/
@@ -15,11 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Incializamos Firebase
     initFirebase();
 
-    // Recuperamos las tareas guardas en localStorage
-    if (localStorage.getItem('tareas'))
-        tareas = JSON.parse(localStorage.getItem('tareas'));
-
-    pintarTareas();
+    getAllTasks();
 });
 
 listaTareas.addEventListener('click', e => {
@@ -34,6 +31,23 @@ formulario.addEventListener('submit', e => {
 
 /*** FUNCIONES ***/
 
+async function getAllTasks() {
+    if (localStorage.getItem('user')) {
+        // Tenemos usuario logueado => recuperamos tareas de FB
+        user = JSON.parse(localStorage.getItem('user'));
+        showCloseButton(true);
+        await getFBTasks();
+
+    } else {
+        // No tenemos usuario logueado => Recuperamos las tareas guardas en localStorage
+        if (localStorage.getItem('tareas'))
+            tareas = JSON.parse(localStorage.getItem('tareas'));
+        showCloseButton(false);
+    }
+
+    pintarTareas();
+}
+
 /**
  * Guardar la tarea
  * @param {event} e 
@@ -45,8 +59,12 @@ function setTarea(e) {
     // Creamos la tarea
     const tarea = {};
     tarea.id = Date.now();
-    tarea.texto = input.value;
-    tarea.estado = false;
+    tarea.title = input.value;
+    tarea.status = 'active';
+
+    // Añadimos la tarea a FB
+    if (!saveTask(tarea))
+        return;
 
     // Añadimos a la colección
     tareas[tarea.id] = tarea;
@@ -76,10 +94,10 @@ function pintarTareas() {
 
     Object.values(tareas).forEach(tarea => {
         const clone = template.cloneNode(true);
-        clone.querySelector('p').textContent = tarea.texto;
+        clone.querySelector('p').textContent = tarea.title;
 
-        // Comprobamos si la tarea tiene el estado realizada
-        if (tarea.estado) {
+        // Comprobamos si la tarea tiene el status realizada
+        if (tarea.status === 'completed') {
             // Cambiamos el fondo
             clone.querySelector('.alert-warning').classList.replace('alert-warning', 'alert-success');
 
@@ -88,13 +106,13 @@ function pintarTareas() {
             firstActionButton.classList.replace('fa-check-circle', 'fa-undo-alt');
             firstActionButton.setAttribute('title', 'Reactivar');
 
-            // Tachamos el texto de la tarea
+            // Tachamos el título de la tarea
             clone.querySelector('p').style.textDecoration = 'line-through';
         }
 
         // Guardamos el id en dataset de cada uno de los iconos
-        clone.querySelectorAll('.fas')[0].dataset.id = tarea.id
-        clone.querySelectorAll('.fas')[1].dataset.id = tarea.id
+        clone.querySelectorAll('.fas')[0].dataset.id = tarea.id;
+        clone.querySelectorAll('.fas')[1].dataset.id = tarea.id;
         fragment.appendChild(clone);
     });
 
@@ -109,21 +127,23 @@ function btnAccion(e) {
 
     // Botón marcar realizada
     if (e.target.classList.contains('fa-check-circle')) {
-        tareas[e.target.dataset.id].estado = true;
-        pintarTareas();
-    }
-
-    // Botón borrar tarea
-    if (e.target.classList.contains('fa-minus-circle')) {
-        delete tareas[e.target.dataset.id];
-        pintarTareas();
+        tareas[e.target.dataset.id].status = 'completed';
+        updateTask(tareas[e.target.dataset.id]);
     }
 
     // Botón deshacer marcar tarea realizada
     if (e.target.classList.contains('fa-undo-alt')) {
-        tareas[e.target.dataset.id].estado = false;
-        pintarTareas();
+        tareas[e.target.dataset.id].status = 'active';
+        updateTask(tareas[e.target.dataset.id]);
     }
+
+    // Botón borrar tarea
+    if (e.target.classList.contains('fa-minus-circle')) {
+        removeTask(tareas[e.target.dataset.id]);
+        delete tareas[e.target.dataset.id];
+    }
+
+    pintarTareas();
 
     e.stopPropagation();
 }

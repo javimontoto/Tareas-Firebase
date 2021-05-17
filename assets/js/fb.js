@@ -24,7 +24,8 @@ const loginModalButton = document.getElementById('login-modal-button'),
     loginButton = document.getElementById('login-button'),
     registerButton = document.getElementById('register-button'),
     verificationButton = document.getElementById('verification-button'),
-    logoutButton = document.getElementById('logout-button');
+    logoutButton = document.getElementById('logout-button'),
+    noLogginWarning = document.querySelector('.no-loggin-warning');
 
 
 /*** LISTENERS ***/
@@ -39,8 +40,7 @@ logoutButton.addEventListener('click', signOutFB, false);
  * Entra en Firebase
  */
 function singInFB() {
-
-    if (!firebase.auth().currentUser) {
+    if (user != {}) {
         let email = document.getElementById('email-login').value,
             password = document.getElementById('pass-login').value;
 
@@ -50,9 +50,9 @@ function singInFB() {
         // Sign in with email and pass.
         firebase.auth().signInWithEmailAndPassword(email, password)
             .then((userCredential) => {
-                // Signed in
                 closeModal('login-modal');
-                console.log('Entramos con email: ', firebase.auth().currentUser.email);
+                user = firebase.auth().currentUser;
+                localStorage.setItem('user', JSON.stringify(user));
                 showCloseButton(true);
                 // ...
             })
@@ -129,8 +129,9 @@ function signUpFB() {
  * Cierra la sesión en Firebase
  */
 function signOutFB() {
-    if (firebase.auth().currentUser) {
+    if (user) {
         firebase.auth().signOut();
+        localStorage.removeItem('user');
         showCloseButton(false);
     }
 }
@@ -139,7 +140,7 @@ function signOutFB() {
  * Envía el email de verificación del correo electrónico proporcionado
  */
 function sendEmailVerification() {
-    firebase.auth().currentUser.sendEmailVerification()
+    user.sendEmailVerification()
         .then(() => {
             myAlert('Confirmación de email', 'Se ha enviado un correo electrónico para que confirme la dirección de email proporcionada.');
         })
@@ -176,9 +177,10 @@ function showCloseButton(show) {
         loginModalButton.classList.replace('d-block', 'd-none');
         registerModalButton.classList.replace('d-block', 'd-none');
         logoutButton.classList.replace('d-none', 'd-block');
+        noLogginWarning.classList.replace('d-block', 'd-none');
 
         // Si no ha verificado el email mostramos el botón de reenvío
-        if (!firebase.auth().currentUser.emailVerified) {
+        if (!user.emailVerified) {
             verificationButton.classList.replace('d-none', 'd-block');
         }
 
@@ -186,6 +188,8 @@ function showCloseButton(show) {
         // Ocultamos el botón de salir y mostramos los de entrar y registrarse
         loginModalButton.classList.replace('d-none', 'd-block');
         registerModalButton.classList.replace('d-none', 'd-block');
+        noLogginWarning.classList.replace('d-none', 'd-block');
+
         logoutButton.classList.replace('d-block', 'd-none');
         verificationButton.classList.replace('d-block', 'd-none');
     }
@@ -221,8 +225,6 @@ function checkEmailAndPass(email, pass, type) {
     let result = true;
     const mailFormat = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-    console.log(`Email: ${email.length}, pass: ${pass} y type: ${type}`);
-
     // Comprobamos el email
     const emailInput = document.getElementById('email-' + type);
     if (email.length === 0 || !mailFormat.test(String(email).toLowerCase())) {
@@ -246,4 +248,63 @@ function checkEmailAndPass(email, pass, type) {
     }
 
     return result;
+}
+
+/**
+ * Guarda la tarea en FB
+ * @param {Object} task Objeto de tipo tarea con id, status y title
+ */
+function saveTask(task) {
+    firebase.database().ref('tareas/' + user.uid + '/' + task.id).set({
+            id: task.id,
+            title: task.title,
+            status: task.status
+        })
+        .catch((error) => {
+            myAlert('Atención', error.message);
+            return false;
+        });
+
+    return true;
+}
+
+/**
+ * Recupera las tareas almacenadas en FB
+ */
+async function getFBTasks() {
+    const db = firebase.database().ref();
+    await db.child('tareas').child(user.uid).get()
+        .then((taskList) => {
+            if (taskList.exists()) {
+                tareas = taskList.val();
+            } else {
+                tareas = {};
+            }
+        }).catch((error) => {
+            myAlert('Atención', error.message);
+        });
+}
+
+/**
+ * Actualiza una tarea
+ * @param {Object} task Objeto de tipo tarea con id, status y title
+ */
+function updateTask(task) {
+    firebase.database().ref('tareas/' + user.uid + '/' + task.id).update({
+            id: task.id,
+            title: task.title,
+            status: task.status
+        })
+        .catch((error) => {
+            myAlert('Atención', error.message);
+            return false;
+        });
+}
+
+function removeTask(task) {
+    firebase.database().ref('tareas/' + user.uid + '/' + task.id).remove()
+        .catch((error) => {
+            myAlert('Atención', error.message);
+            return false;
+        });
 }
