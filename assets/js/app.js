@@ -7,7 +7,7 @@ const formulario = document.getElementById('formulario'),
 
 
 /*** VARIABLES ***/
-let tareas = {};    //=> Contiene las tareas 
+let tareas = {}; //=> Contiene las tareas 
 
 
 /*** LISTENERS ***/
@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Recuperamos las tareas guardas en localStorage
     if (localStorage.getItem('tareas'))
         tareas = JSON.parse(localStorage.getItem('tareas'));
-        
+
     pintarTareas();
 });
 
@@ -106,7 +106,7 @@ function pintarTareas() {
  * @param {event} e 
  */
 function btnAccion(e) {
-    
+
     // Botón marcar realizada
     if (e.target.classList.contains('fa-check-circle')) {
         tareas[e.target.dataset.id].estado = true;
@@ -124,6 +124,6 @@ function btnAccion(e) {
         tareas[e.target.dataset.id].estado = false;
         pintarTareas();
     }
-    
+
     e.stopPropagation();
 }
