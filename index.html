@@ -30,17 +30,18 @@
                         <div class="form-group">
                             <label for="email-login" class="col-form-label">Email:</label>
                             <input type="text" class="form-control" id="email-login">
-                            <div class="invalid-feedback d-none">Introduzca una dirección de email válida</div>
+                            <div class="invalid-feedback hidden">Introduzca una dirección de email válida</div>
                         </div>
                         <div class="form-group">
                             <label for="pass-login" class="col-form-label">Contraseña:</label>
                             <input type="password" class="form-control" id="pass-login">
-                            <div class="invalid-feedback d-none">La contraseña debe tener al menos 6 caracteres</div>
+                            <div class="invalid-feedback hidden">La contraseña debe tener al menos 6 caracteres</div>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" id="login-button" class="btn btn-primary">Entrar</button>
+                    <button type="button" id="reset-pass-button" class="btn btn-primary">Recuperar contraseña</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                 </div>
             </div>
@@ -61,12 +62,12 @@
                         <div class="form-group">
                             <label for="email-register" class="col-form-label">Email:</label>
                             <input type="text" class="form-control" id="email-register">
-                            <div class="invalid-feedback d-none">La dirección de email no es válida</div>
+                            <div class="invalid-feedback hidden">La dirección de email no es válida</div>
                         </div>
                         <div class="form-group">
                             <label for="pass-register" class="col-form-label">Contraseña:</label>
                             <input type="password" class="form-control" id="pass-register">
-                            <div class="invalid-feedback d-none">La contraseña debe tener al menos 6 caracteres</div>
+                            <div class="invalid-feedback hidden">La contraseña debe tener al menos 6 caracteres</div>
                         </div>
                     </form>
                 </div>
@@ -92,40 +93,38 @@
             <div class="collapse navbar-collapse" id="log-buttons">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
-                        <button id="login-modal-button" class="btn btn-outline-primary mr-1 mb-1 d-block" data-toggle="modal" data-target="#login-modal">Iniciar sesión</button>
+                        <button id="login-modal-button" class="btn btn-outline-primary mr-1 mb-1 active" data-toggle="modal" data-target="#login-modal">Iniciar sesión</button>
                     </li>
                     <li class="nav-item">
-                        <button id="register-modal-button" class="btn btn-primary d-block" data-toggle="modal" data-target="#register-modal">Registrarse</button>
+                        <button id="register-modal-button" class="btn btn-primary active" data-toggle="modal" data-target="#register-modal">Registrarse</button>
                     </li>
                     <li class="nav-item">
-                        <button id="verification-button" class="btn btn-danger mr-1 mb-1 d-none">Reenviar email de
+                        <button id="verification-button" class="btn btn-danger mr-1 mb-1 hidden">Reenviar email de
                             verificación</button>
                     </li>
                     <li class="nav-item">
-                        <button id="logout-button" class="btn btn-primary d-none">Cerrar sesión</button>
+                        <button id="logout-button" class="btn btn-primary hidden">Cerrar sesión</button>
                     </li>
                 </ul>
             </div>
-
         </nav>
-        <h6 class="no-loggin-warning text-danger d-block"><u>Nota</u>: No ha iniciado sesión, por lo que las tareas no se sincronizarán. Solo se mantendrán en este navegador mientras no vacíe la cache.</h6>
 
-        <form id="formulario" class="main-form mt-3">
+        <form id="formulario" class="main-form mt-3 hidden">
             <input id="input" type="text" placeholder="Nueva tarea" class="form-control my-2 mr-1" autofocus>
             <button class="btn btn-primary btn-block" type="submit">Añadir</button>
         </form>
 
-        <div id="lista-tareas" class="mt-3"></div>
+        <ul id="lista-tareas" class="mt-3 hidden"></ul>
     </div>
 
     <template id="template">
-        <div class="alert alert-warning d-flex justify-content-between align-items-center">
+        <li class="alert alert-warning d-flex justify-content-between align-items-center">
             <p class="m-0">Tarea 1</p>
             <h3 class="d-flex flex-row flex-nowrap m-0 ml-2">
                 <i class="fas fa-check-circle text-success mr-1" style="cursor: pointer;" title="Realizada"></i>
                 <i class="fas fa-minus-circle text-danger" style="cursor: pointer;" title="Borrar"></i>
             </h3>
-        </div>
+        </li>
     </template>
 
     <!-- Firebase -->
@@ -133,7 +132,6 @@
     <script src="https://www.gstatic.com/firebasejs/8.5.0/firebase-analytics.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.5.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.5.0/firebase-database.js"></script>
-
 
     <!-- Bootstrap -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
@@ -143,9 +141,12 @@
     <!-- Bootbox -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.5.2/bootbox.min.js" integrity="sha512-RdSPYh1WA6BF0RhpisYJVYkOyTzK4HwofJ3Q7ivt/jkpW6Vc8AurL1R+4AUcvn9IwEKAPm/fk7qFZW3OuiUDeg==" crossorigin="anonymous"></script>
 
+    <!-- SortableJS -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+
     <!-- JS -->
-    <script src="assets/js/app.js"></script>
     <script src="assets/js/fb.js"></script>
+    <script src="assets/js/app.js"></script>
     <script src="assets/js/myBootbox.js"></script>
 
 </body>

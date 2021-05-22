@@ -8,6 +8,10 @@ body {
     background: linear-gradient(180deg, rgba(209, 125, 7, 1) 0%, rgba(255, 200, 0, 1) 100%);
 }
 
+.hidden {
+    display: none !important;
+}
+
 
 /*** BARRA SUPERIOR ***/
 
@@ -46,4 +50,38 @@ body {
 
 .main-form>button {
     flex: 1;
+}
+
+
+/*** LISTA TAREAS ***/
+
+#lista-tareas {
+    padding-left: 0;
+}
+
+
+/*** LOADER ***/
+
+#loader {
+    border: 12px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 12px solid #d27e07;
+    width: 70px;
+    height: 70px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.center {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
 }
