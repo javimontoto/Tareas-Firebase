@@ -138,7 +138,8 @@ function pintarTareas() {
 
     // Hacemos la lista de tareas ordenable utilizando la función de Bootstrap
     Sortable.create(listaTareas, {
-        onEnd: e => {
+        animation: 150,
+        onSort: e => {
             listaTareas.querySelectorAll('li').forEach((el, index) => {
                 tareas[el.dataset.id].position = index + 1;
             });
