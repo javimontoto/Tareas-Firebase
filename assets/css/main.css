@@ -59,6 +59,11 @@ body {
     padding-left: 0;
 }
 
+#lista-tareas > li {
+    touch-action: none; 
+    @media (max-width: 480px) { touch-action: initial; }
+}
+
 
 /*** LOADER ***/
 
