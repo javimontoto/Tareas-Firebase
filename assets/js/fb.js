@@ -24,7 +24,8 @@ function initFirebase() {
  * Entra en Firebase
  */
 function singInFB() {
-    if (user != {}) {
+
+    if (Object.keys(user).length === 0) {
         let email = document.getElementById('email-login').value,
             password = document.getElementById('pass-login').value;
 
@@ -115,7 +116,8 @@ function signUpFB() {
 function signOutFB() {
     if (user) {
         firebase.auth().signOut();
-        localStorage.removeItem('user');
+        localStorage.clear();
+        user = {};
         showCloseButton(false);
     }
 }
@@ -124,7 +126,8 @@ function signOutFB() {
  * Envía el email de verificación del correo electrónico proporcionado
  */
 function sendEmailVerification() {
-    user.sendEmailVerification()
+
+    firebase.auth().currentUser.sendEmailVerification()
         .then(() => {
             myAlert('Confirmación de email', 'Se ha enviado un correo electrónico para que confirme la dirección de email proporcionada.');
         })
