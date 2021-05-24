@@ -166,21 +166,24 @@ function sendPasswordReset() {
 /*** MÉTODOS FB */
 /**
  * Guarda la tarea en FB
- * @param {Object} task Objeto de tipo tarea con id, status y title
+ * @param {Object} task Tarea a guardar con id, title, status y position
+ * @param {Function} callback Método a ejecutar se guardó correctamente
  */
-function saveTask(task) {
+function saveTask(task, callback) {
     firebase.database().ref('tareas/' + user.uid + '/' + task.id).set({
             id: task.id,
             title: task.title,
             status: task.status,
             position: task.position
         })
+        .then(() => { 
+             // Añadimos a la colección
+            tareas[task.id] = task;
+            callback();
+         })
         .catch((error) => {
             myAlert('Atención', error.message);
-            return false;
         });
-
-    return true;
 }
 
 /**

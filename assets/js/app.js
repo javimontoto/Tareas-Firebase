@@ -11,6 +11,7 @@ let user = {}; //=> Usuario de firebase
 const formulario = document.getElementById('formulario'),
     input = document.getElementById('input'),
     listaTareas = document.getElementById('lista-tareas'),
+    pdteVerificar = document.getElementById('pendiente-verificar'),
     template = document.getElementById('template').content,
     fragment = document.createDocumentFragment(),
     loginModalButton = document.getElementById('login-modal-button'),
@@ -51,7 +52,7 @@ function getAllTasks() {
         getFBTasks(pintarTareas);
 
     } else {
-        // No tenemos usuario logueado => Recuperamos las tareas guardas en localStorage
+        // No tenemos usuario logueado
         showCloseButton(false);
     }
 }
@@ -73,20 +74,13 @@ function addTarea(e) {
     tarea.status = 'active';
     tarea.position = lastPosition + 1;
 
-    // Comprobamos si estamos logueados
+    // Comprobamos si estamos logueados y si se añadió bien la tarea a FB
     if (localStorage.getItem('user')) {
-        // Añadimos la tarea a FB
-        if (!saveTask(tarea))
-            return;
+        saveTask(tarea, pintarTareas);
     }
-
-    // Añadimos a la colección
-    tareas[tarea.id] = tarea;
 
     formulario.reset();
     input.focus();
-
-    pintarTareas();
 }
 
 /**
@@ -200,13 +194,13 @@ function showCloseButton(show) {
             formulario.classList.replace('hidden', 'active');
             listaTareas.classList.replace('hidden', 'active');
         } else {
-            verificationButton.classList.replace('hidden', 'active');
+            pdteVerificar.classList.replace('hidden', 'active');
         }
 
     } else {
         // Ocultamos el botón de salir y mostramos los de entrar y registrarse
         logoutButton.classList.replace('active', 'hidden');
-        verificationButton.classList.replace('active', 'hidden');
+        pdteVerificar.classList.replace('active', 'hidden');
         formulario.classList.replace('active', 'hidden');
         listaTareas.classList.replace('active', 'hidden');
         loginModalButton.classList.replace('hidden', 'active');
