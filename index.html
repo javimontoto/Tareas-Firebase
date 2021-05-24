@@ -9,8 +9,11 @@
 
     <title>😎 Tareas para hacer 😎</title>
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+        integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
+        crossorigin="anonymous" />
     <link rel="stylesheet" href="assets/css/main.css">
 </head>
 
@@ -86,21 +89,20 @@
                 <img src="/Tareas-Firebase/assets/icons/lista-de-verificacion.svg" alt="logo">
                 <h1>Tareas</h1>
             </span>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#log-buttons" aria-controls="log-buttons" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#log-buttons"
+                aria-controls="log-buttons" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
             <div class="collapse navbar-collapse" id="log-buttons">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
-                        <button id="login-modal-button" class="btn btn-outline-primary mr-1 mb-1 active" data-toggle="modal" data-target="#login-modal">Iniciar sesión</button>
+                        <button id="login-modal-button" class="btn btn-outline-primary mr-1 mb-1 active"
+                            data-toggle="modal" data-target="#login-modal">Iniciar sesión</button>
                     </li>
                     <li class="nav-item">
-                        <button id="register-modal-button" class="btn btn-primary active" data-toggle="modal" data-target="#register-modal">Registrarse</button>
-                    </li>
-                    <li class="nav-item">
-                        <button id="verification-button" class="btn btn-danger mr-1 mb-1 hidden">Reenviar email de
-                            verificación</button>
+                        <button id="register-modal-button" class="btn btn-primary active" data-toggle="modal"
+                            data-target="#register-modal">Registrarse</button>
                     </li>
                     <li class="nav-item">
                         <button id="logout-button" class="btn btn-primary hidden">Cerrar sesión</button>
@@ -109,12 +111,21 @@
             </div>
         </nav>
 
-        <form id="formulario" class="main-form mt-3 hidden">
-            <input id="input" type="text" placeholder="Nueva tarea" class="form-control my-2 mr-1" autofocus>
-            <button class="btn btn-primary btn-block" type="submit">Añadir</button>
-        </form>
+        <div class="container">
+            <div id="pendiente-verificar" class="alert alert-dark mt-3 hidden">
+                <p>Para poder empezar a utilizar <span style="font-variant: small-caps;">Tareas</span> es necesario verificar la dirección de email con la que se
+                registró.</p>
+                <button id="verification-button" class="btn btn-danger mr-1 mb-1">Reenviar email de
+                    verificación</button>
+            </div>
 
-        <ul id="lista-tareas" class="mt-3 hidden"></ul>
+            <form id="formulario" class="main-form mt-3 hidden">
+                <input id="input" type="text" placeholder="Nueva tarea" class="form-control my-2 mr-1" autofocus>
+                <button class="btn btn-primary btn-block" type="submit">Añadir</button>
+            </form>
+
+            <ul id="lista-tareas" class="mt-3 hidden"></ul>
+        </div>
     </div>
 
     <template id="template">
@@ -134,12 +145,20 @@
     <script src="https://www.gstatic.com/firebasejs/8.5.0/firebase-database.js"></script>
 
     <!-- Bootstrap -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
+    </script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
+    </script>
 
     <!-- Bootbox -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.5.2/bootbox.min.js" integrity="sha512-RdSPYh1WA6BF0RhpisYJVYkOyTzK4HwofJ3Q7ivt/jkpW6Vc8AurL1R+4AUcvn9IwEKAPm/fk7qFZW3OuiUDeg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.5.2/bootbox.min.js"
+        integrity="sha512-RdSPYh1WA6BF0RhpisYJVYkOyTzK4HwofJ3Q7ivt/jkpW6Vc8AurL1R+4AUcvn9IwEKAPm/fk7qFZW3OuiUDeg=="
+        crossorigin="anonymous"></script>
 
     <!-- SortableJS -->
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
